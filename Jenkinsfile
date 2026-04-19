@@ -34,7 +34,7 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
-                    python calculator.py
+                    python app.py
                 '''
             }
         }
