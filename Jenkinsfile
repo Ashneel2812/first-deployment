@@ -37,7 +37,7 @@ pipeline {
                 sh '''
                     python app.py &
                     sleep 5
-                    curl http://127.0.0.1:5000
+                    python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:5000').read())"
                     pkill -f "python app.py"
                 '''
             }
