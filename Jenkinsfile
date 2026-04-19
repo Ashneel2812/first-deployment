@@ -9,26 +9,19 @@ pipeline {
             }
         }
 
-        stage('Setup Environment') {
+        stage('Setup') {
             steps {
-                echo 'Setting up Python virtual environment...'
+                echo 'Using preinstalled Python environment...'
                 sh '''
-                    sudo apt update
-                    sudo apt install -y python3 python3-pip python3-venv
-
-                    # Create virtual environment
                     python3 -m venv venv
-
-                    # Activate and upgrade pip inside venv (safe way)
                     . venv/bin/activate
                     pip install --upgrade pip
                 '''
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
-                echo 'Running unit tests...'
                 sh '''
                     . venv/bin/activate
                     python -m unittest discover -v
@@ -36,9 +29,8 @@ pipeline {
             }
         }
 
-        stage('Run App (Smoke Test)') {
+        stage('Run App') {
             steps {
-                echo 'Running calculator app...'
                 sh '''
                     . venv/bin/activate
                     python calculator.py
@@ -53,9 +45,6 @@ pipeline {
         }
         failure {
             echo 'Build Failed ❌'
-        }
-        always {
-            echo 'Pipeline finished.'
         }
     }
 }
