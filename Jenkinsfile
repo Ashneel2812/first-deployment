@@ -11,33 +11,51 @@ pipeline {
 
         stage('Setup Environment') {
             steps {
-                echo 'Installing dependencies...'
-                sh 'python3 -m pip install --upgrade pip'
-                sh 'pip3 install -r requirements.txt'
+                echo 'Setting up Python virtual environment...'
+                sh '''
+                    sudo apt update
+                    sudo apt install -y python3 python3-pip python3-venv
+
+                    # Create virtual environment
+                    python3 -m venv venv
+
+                    # Activate and upgrade pip inside venv (safe way)
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                echo 'Running Flask unit tests...'
-                sh 'python3 -m unittest discover -v'
+                echo 'Running unit tests...'
+                sh '''
+                    . venv/bin/activate
+                    python -m unittest discover -v
+                '''
             }
         }
 
         stage('Run App (Smoke Test)') {
             steps {
-                echo 'Starting Flask app (quick check)...'
-                sh 'python3 app.py & sleep 5; pkill -f app.py'
+                echo 'Running calculator app...'
+                sh '''
+                    . venv/bin/activate
+                    python calculator.py
+                '''
             }
         }
     }
 
     post {
         success {
-            echo 'Build Successful 🚀'
+            echo 'Build Successful ✔'
         }
         failure {
             echo 'Build Failed ❌'
+        }
+        always {
+            echo 'Pipeline finished.'
         }
     }
 }
