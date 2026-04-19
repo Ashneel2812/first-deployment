@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.10-slim'
+            args '-u root'
+        }
+    }
 
     stages {
 
@@ -11,11 +16,9 @@ pipeline {
 
         stage('Setup') {
             steps {
-                echo 'Using preinstalled Python environment...'
+                echo 'Installing dependencies inside Docker container...'
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
+                    python -m pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
             }
@@ -24,7 +27,6 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                    . venv/bin/activate
                     python -m unittest discover -v
                 '''
             }
@@ -33,7 +35,6 @@ pipeline {
         stage('Run App (Smoke Test)') {
             steps {
                 sh '''
-                    . venv/bin/activate
                     python app.py &
                     sleep 5
                     curl http://127.0.0.1:5000
@@ -44,11 +45,14 @@ pipeline {
     }
 
     post {
+        always {
+            echo 'Build Completed'
+        }
         success {
-            echo 'Build Successful ✔'
+            echo 'Build Successful'
         }
         failure {
-            echo 'Build Failed ❌'
+            echo 'Build Failed'
         }
     }
 }
