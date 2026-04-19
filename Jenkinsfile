@@ -30,11 +30,14 @@ pipeline {
             }
         }
 
-        stage('Run App') {
+        stage('Run App (Smoke Test)') {
             steps {
                 sh '''
                     . venv/bin/activate
-                    python app.py
+                    python app.py &
+                    sleep 5
+                    curl http://127.0.0.1:5000
+                    pkill -f "python app.py"
                 '''
             }
         }
