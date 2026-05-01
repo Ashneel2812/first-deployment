@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-word-frontend
+  namespace: random-word-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: random-word-frontend
+  template:
+    metadata:
+      labels:
+        app: random-word-frontend
+    spec:
+      containers:
+        - name: random-word-frontend
+          image: ashneel2812/random-word-frontend:v1.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: REACT_APP_BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-url-config
+                  key: REACT_APP_BACKEND_URL  # Use the key from the ConfigMap
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

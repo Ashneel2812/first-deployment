@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-word-backend
+  namespace: random-word-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: random-word-backend
+  template:
+    metadata:
+      labels:
+        app: random-word-backend
+    spec:
+      containers:
+        - name: random-word-backend
+          image: ashneel2812/random-word-backend:v1.0
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

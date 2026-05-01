@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: random-word-backend
+  namespace: random-word-app
+spec:
+  selector:
+    app: random-word-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP  # Exposes the service only within the cluster

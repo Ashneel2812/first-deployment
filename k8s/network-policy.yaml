@@ -1,0 +1,20 @@
+# network-policy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-to-backend-policy
+  namespace: random-word-app
+spec:
+  podSelector:
+    matchLabels:
+      app: random-word-backend  # Apply policy to backend pods
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: random-word-frontend  # Allow traffic from frontend pods
+      ports:
+        - protocol: TCP
+          port: 5000  # Allow traffic to backend on port 5000
+  policyTypes:
+    - Ingress
