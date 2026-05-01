@@ -4,4 +4,4 @@ metadata:
   name: backend-url-config
   namespace: random-word-app
 data:
-  REACT_APP_BACKEND_URL: "http://random-word-backend:5000"
+  REACT_APP_BACKEND_URL: "http://random-word-backend:5000"  
