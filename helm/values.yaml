@@ -1,0 +1,36 @@
+namespace: random-word-app
+
+backend:
+  image:
+    repository: ashneel2812/random-word-backend
+    tag: v1.0
+  replicas: 2
+  containerPort: 8080
+  servicePort: 5000
+  type: ClusterIP
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+
+frontend:
+  image:
+    repository: ashneel2812/random-word-frontend
+    tag: v1.0
+  replicas: 2
+  containerPort: 80
+  servicePort: 80
+  type: ClusterIP
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+
+config:
+  backendUrl: "http://random-word-backend:5000"
