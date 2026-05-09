@@ -34,3 +34,16 @@ frontend:
 
 config:
   backendUrl: "http://random-word-backend:5000"
+
+persistence:
+  enabled: true
+
+  size: 1Gi
+
+  accessMode: ReadWriteOnce
+
+  storageClass: manual
+
+  hostPath: /mnt/data/random-word-app
+
+  mountPath: /app/data

@@ -8,16 +8,21 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-backend
+
   template:
     metadata:
       labels:
         app: {{ .Release.Name }}-backend
+
     spec:
       containers:
         - name: {{ .Release.Name }}-backend
+
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+
           ports:
             - containerPort: {{ .Values.backend.containerPort }}
+
           resources:
             requests:
               memory: {{ .Values.backend.resources.requests.memory }}
@@ -25,3 +30,12 @@ spec:
             limits:
               memory: {{ .Values.backend.resources.limits.memory }}
               cpu: {{ .Values.backend.resources.limits.cpu }}
+
+          volumeMounts: #links to volumes mentioned below
+            - name: backend-storage # name of the vloume and the path inside the container where it will be mounted (is actually stored)
+              mountPath: {{ .Values.persistence.mountPath }}
+
+      volumes:
+        - name: backend-storage
+          persistentVolumeClaim: # search for PV and store it in the PV
+            claimName: {{ .Release.Name }}-pvc # one PVC linked to one PV only
